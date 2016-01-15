@@ -7,11 +7,69 @@ class LineAnalyzer
   #* highest_wf_words - an array of words with the maximum number of occurrences (calculated)
   #* content          - the string analyzed (provided)
   #* line_number      - the line number analyzed (provided)
+  
+  @@highest_wf_count = 0
+  @@highest_wf_words = []
+  
+  @content = ""
+  @line_number = 0
+  @word_frequency = Hash.new(0)
+  
+  attr_reader :highest_wf_count, :highest_wf_words, :content, :line_number
+  
 
   #Add the following methods in the LineAnalyzer class.
   #* initialize() - taking a line of text (content) and a line number
+  
+  def initialize(content, line_number)
+  	self.content = content
+  	self.line_number = line_number
+  	self.calculate_word_frequency()
+  	#puts @word_frequency
+  	self.update_highest_wf_count()
+  	self.update_highest_wf_words()
+  	#puts @@highest_wf_words.class
+  end
+  
+  #TODO Is this really needed?
+  def content= (content)
+    @content = content
+  end
+  
+  #TODO is this really needed?
+  def line_number= (line_number)
+    @line_number= line_number
+  end
+  
   #* calculate_word_frequency() - calculates result
 
+  def calculate_word_frequency()
+    @word_frequency = Hash.new(0) 
+    
+    content.split.each do |word| @word_frequency[word.downcase] += 1
+    #puts @word_frequency
+    # puts "ok "
+  end
+  
+  def update_highest_wf_count()
+    max = @word_frequency.values.max
+    if (max > @@highest_wf_count) 
+      @@highest_wf_count = max
+      #puts "hoyeste oppdatert til " + @@highest_wf_count.to_s
+    end
+  end
+  
+  def update_highest_wf_words()
+    #puts max
+    highest_freq_words = Hash[@word_frequency.select { |word, frequency| frequency == @@highest_wf_count }]
+    #puts word_frequency.max_by { |word,frequency| frequency }
+    #highest_wf_count(highest_freq_words.values[0])
+    @@highest_wf_words.push highest_freq_words.keys.each
+    #puts @@highest_wf_words.to_s
+    #puts highest_freq_words
+  end
+    
+  end
   #Implement the initialize() method to:
   #* take in a line of text and line number
   #* initialize the content and line_number attributes
@@ -23,6 +81,8 @@ class LineAnalyzer
   #* identify the words that were used the maximum number of times and
   #  store that in the highest_wf_words attribute.
 end
+
+LineAnalyzer.new("dette er en dette er en fin en sang er", 3)
 
 #  Implement a class called Solution. 
 class Solution
